@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:at="http://purl.org/atompub/tombstones/1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:fhir="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2005/Atom C:/Users/JERRYG~1/Dropbox/Cognitive/MAPFOR~1/fhir-all-xsd_09/fhir-atom.xsd">
+	<entry>
+		<id/>
+		<content type="">
+			<fhir:AllergyIntolerance id="865">
+				<fhir:identifier>
+					<fhir:label value="PENICILLIN"/>
+					<fhir:system value="vuid"/>
+					<fhir:key value="4019880"/>
+				</fhir:identifier>
+				<fhir:sensitivityType value="allergy">
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.VAallergytype"/>
+						<fhir:valueCoding>
+							<fhir:code value="D"/>
+							<fhir:display value="DRUG"/>
+						</fhir:valueCoding>
+					</fhir:extension>
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.VAAllergyMechanism"/>
+						<fhir:valueString value="PHARMACOLOGIC"/>
+					</fhir:extension>
+				</fhir:sensitivityType>
+				<fhir:recordedDate value="2005-03-20">
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.verifiedDateTime"/>
+						<fhir:valueDateTime value="2005-03-20T12:25:00"/>
+					</fhir:extension>
+				</fhir:recordedDate>
+				<fhir:status value="confirmed"/>
+				<fhir:subject id="unknown">
+					<fhir:display value="unknown"/>
+				</fhir:subject>
+				<fhir:substance>
+					<fhir:extension>
+						<fhir:url/>
+						<fhir:valueCoding>
+							<fhir:system value="vuid"/>
+							<fhir:code value="4021523"/>
+							<fhir:display value="PENICILLINS AND BETA-LACTAM ANTIMICROBIALS"/>
+						</fhir:valueCoding>
+					</fhir:extension>
+					<fhir:type value="4019880"/>
+				</fhir:substance>
+				<fhir:reactions>
+					<fhir:type/>
+					<fhir:display value="ITCHING,WATERING EYES"/>
+				</fhir:reactions>
+			</fhir:AllergyIntolerance>
+		</content>
+	</entry>
+	<entry>
+		<id/>
+		<content type="">
+			<fhir:AllergyIntolerance id="966">
+				<fhir:identifier>
+					<fhir:label value="CHOCOLATE"/>
+					<fhir:system value="vuid"/>
+					<fhir:key value="4636681"/>
+				</fhir:identifier>
+				<fhir:sensitivityType value="allergy">
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.VAallergytype"/>
+						<fhir:valueCoding>
+							<fhir:code value="DF"/>
+							<fhir:display value="DRUG, FOOD"/>
+						</fhir:valueCoding>
+					</fhir:extension>
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.VAAllergyMechanism"/>
+						<fhir:valueString value="ALLERGY"/>
+					</fhir:extension>
+				</fhir:sensitivityType>
+				<fhir:recordedDate value="2007-12-17">
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.verifiedDateTime"/>
+						<fhir:valueDateTime value="2007-12-17T16:14:00"/>
+					</fhir:extension>
+				</fhir:recordedDate>
+				<fhir:status value="confirmed"/>
+				<fhir:subject id="unknown">
+					<fhir:display value="unknown"/>
+				</fhir:subject>
+				<fhir:substance>
+					<fhir:type value="4019401"/>
+				</fhir:substance>
+				<fhir:reactions>
+					<fhir:type value="4637011"/>
+					<fhir:display value="DIARRHEA"/>
+				</fhir:reactions>
+			</fhir:AllergyIntolerance>
+		</content>
+	</entry>
+	<entry>
+		<id/>
+		<content type="">
+			<fhir:AllergyIntolerance id="638">
+				<fhir:identifier>
+					<fhir:label value="STRAWBERRIES"/>
+					<fhir:system value="vuid"/>
+					<fhir:key value="4637360"/>
+				</fhir:identifier>
+				<fhir:sensitivityType value="allergy">
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.VAallergytype"/>
+						<fhir:valueCoding>
+							<fhir:code value="F"/>
+							<fhir:display value="FOOD"/>
+						</fhir:valueCoding>
+					</fhir:extension>
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.VAAllergyMechanism"/>
+						<fhir:valueString value="ALLERGY"/>
+					</fhir:extension>
+				</fhir:sensitivityType>
+				<fhir:recordedDate value="2002-02-13">
+					<fhir:extension>
+						<fhir:url value="org.socraticgrid.constants.verifiedDateTime"/>
+						<fhir:valueDateTime value="2002-02-13T11:39:38"/>
+					</fhir:extension>
+				</fhir:recordedDate>
+				<fhir:status value="confirmed"/>
+				<fhir:subject id="unknown">
+					<fhir:display value="unknown"/>
+				</fhir:subject>
+				<fhir:substance>
+					<fhir:type/>
+				</fhir:substance>
+				<fhir:reactions>
+					<fhir:type/>
+					<fhir:display value="ITCHING,WATERING EYES"/>
+				</fhir:reactions>
+			</fhir:AllergyIntolerance>
+		</content>
+	</entry>
+</feed>

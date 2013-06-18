@@ -1,0 +1,186 @@
+<patientDataFact>
+    <factType>Immunizations</factType>
+    <trxnType>list</trxnType>
+    <visibleGridHeaders>true</visibleGridHeaders>
+    <maxColumns>3</maxColumns>
+    <detailTabs>
+        <label>Detail</label>
+        <type>grid</type>
+        <responseType>detail</responseType>
+        <sectionId>immuneDetails</sectionId>
+        <filters>code</filters>
+        <filters>codeSystemCode</filters>
+    </detailTabs>
+    <detailTabs>
+        <label>Background</label>
+        <type>text</type>
+        <responseType>ecs</responseType>
+        <sectionId>101</sectionId>
+        <filters>code</filters>
+        <filters>codeSystemCode</filters>
+        <filters>sectionId</filters>
+    </detailTabs>
+    <detailTabs>
+        <label>Disease</label>
+        <type>text</type>
+        <responseType>ecs</responseType>
+        <sectionId>103</sectionId>
+        <filters>code</filters>
+        <filters>codeSystemCode</filters>
+        <filters>sectionId</filters>
+    </detailTabs>
+    <detailTabs>
+        <label>Podcasts</label>
+        <type>text</type>
+        <responseType>ecs</responseType>
+        <sectionId>22</sectionId>
+        <filters>code</filters>
+        <filters>codeSystemCode</filters>
+        <filters>sectionId</filters>
+    </detailTabs>
+    <detailTabs>
+        <label>Videos</label>
+        <type>text</type>
+        <responseType>ecs</responseType>
+        <sectionId>21</sectionId>
+        <filters>code</filters>
+        <filters>codeSystemCode</filters>
+        <filters>sectionId</filters>
+    </detailTabs>
+    <gridHeaders>
+        <columnId>vaccine</columnId>
+        <value>Vaccine</value>
+        <description>A column header.</description>
+        <width>10</width>
+    </gridHeaders>
+    <gridHeaders>
+        <columnId>column1</columnId>
+        <value>#1</value>
+        <description>A column header.</description>
+        <width>10</width>
+    </gridHeaders>
+    <gridHeaders>
+        <columnId>column2</columnId>
+        <value>#2</value>
+        <description>A column header.</description>
+        <width>10</width>
+    </gridHeaders>
+    <gridHeaders>
+        <columnId>column3</columnId>
+        <value>#3</value>
+        <description>A column header.</description>
+        <width>10</width>
+    </gridHeaders>
+    <gridHeaders>
+        <columnId>column4</columnId>
+        <value>#4</value>
+        <description>A column header.</description>
+        <width>10</width>
+    </gridHeaders>
+    <gridHeaders>
+        <columnId>column5</columnId>
+        <value>#5</value>
+        <description>A column header.</description>
+        <width>10</width>
+    </gridHeaders>
+    <facts>
+        <vaccine>Hepatitis A Injection</vaccine>
+        <code>054868-4056-*0</code>
+        <codeSystemName>NDC-FDA Drug Registration and Listing System</codeSystemName>
+        <codeSystemCode>PH_FDA_DRLS</codeSystemCode>
+        <column1>1990-06-15</column1>
+        <column2>1990-06-15</column2>
+        <column3>1990-06-15</column3>
+        <column4>1990-06-15</column4>
+        <column5>1990-06-15</column5>
+        <column6>1990-06-15</column6>
+        <column7>1990-06-15</column7>
+        <hoverTexts>054868-4056-*0 (PH_FDA_DRLS)</hoverTexts>
+        <hoverTexts>Age: 2 months</hoverTexts>
+        <hoverTexts>Age: 4 months</hoverTexts>
+        <hoverTexts>Age: 8 months</hoverTexts>
+        <hoverTexts>Age: 16 months</hoverTexts>
+        <hoverTexts>Age: 10 months</hoverTexts>
+        <hoverTexts>Age: 12 months</hoverTexts>
+        <hoverTexts>Age: 16 months</hoverTexts>
+        <itemId>10</itemId>
+        <status>Complete</status>
+    </facts>
+    <facts>
+        <vaccine>Hepatitis B</vaccine>
+        <code>000006-4995-00</code>
+        <codeSystemName>NDC-FDA Drug Registration and Listing System</codeSystemName>
+        <codeSystemCode>PH_FDA_DRLS</codeSystemCode>
+        <column1>15-Aug-1990</column1>
+        <column2>15-Oct-1990</column2>
+        <column3>15-Dec-1990</column3>
+        <column4>15-Jun-1991</column4>
+        <column5>15-Aug-1994</column5>
+        <hoverTexts>000006-4995-00 (PH_FDA_DRLS)</hoverTexts>
+        <hoverTexts>Age: 2 months</hoverTexts>
+        <hoverTexts>Age: 4 months</hoverTexts>
+        <hoverTexts>Age: 7 months</hoverTexts>
+        <hoverTexts>Age: 12 months</hoverTexts>
+        <hoverTexts>Age: 4 years</hoverTexts>
+        <itemId>11</itemId>
+        <status>Complete</status>
+    </facts>
+    <facts>
+        <vaccine>Tetanus</vaccine>
+        <code>037</code>
+        <codeSystemName>ICD-9-CM, Volume 1&amp;2</codeSystemName>
+        <codeSystemCode>PH_DiseaseClassification_ICD-9CM</codeSystemCode>
+        <column1>15-Aug-2000</column1>
+        <column2>11-Nov-2000</column2>
+        <column3>15-Nov-2002</column3>
+        <hoverTexts>037 (ICD-9-CM, Volume 1&amp;2)</hoverTexts>
+        <hoverTexts>Age: 10 years</hoverTexts>
+        <hoverTexts>Age: 10 years</hoverTexts>
+        <hoverTexts>Age: 12 years</hoverTexts>
+        <itemId>12</itemId>
+        <status>Complete</status>
+    </facts>
+    <facts>
+        <vaccine>MMR</vaccine>
+        <code>V064</code>
+        <codeSystemName>ICD-9-CM, Volume 1&amp;2</codeSystemName>
+        <codeSystemCode>PH_DiseaseClassification_ICD-9CM</codeSystemCode>
+        <column1>05-Jun-2000</column1>
+        <column2>12-Dec-2007</column2>
+        <hoverTexts>7890 (ICD-9-CM, Volume 1&amp;2)</hoverTexts>
+        <hoverTexts>Age: 10 years</hoverTexts>
+        <hoverTexts>Age: 13 years</hoverTexts>
+        <itemId>13</itemId>
+        <status>Complete</status>
+    </facts>
+    <facts>
+        <vaccine>Polio</vaccine>
+        <code>V063</code>
+        <codeSystemName>ICD-9-CM, Volume 1&amp;2</codeSystemName>
+        <codeSystemCode>PH_DiseaseClassification_ICD-9CM</codeSystemCode>
+        <column1>12-Dec-2008</column1>
+        <column2>12-Dec-2007</column2>
+        <hoverTexts>V063 (ICD-9-CM)</hoverTexts>
+        <hoverTexts>Age: 12 years</hoverTexts>
+        <hoverTexts>Age: 13 years</hoverTexts>
+        <itemId>14</itemId>
+        <status>Complete</status>
+    </facts>
+    <facts>
+        <vaccine>Flu</vaccine>
+        <code>9012</code>
+        <codeSystemName>SNOMED-CT</codeSystemName>
+        <codeSystemCode>PH_SNOMED-CT</codeSystemCode>
+        <column1>15-Jun-1995</column1>
+        <column2>12-Dec-1996</column2>
+        <column3>12-Dec-1997</column3>
+        <hoverTexts>9012 (PH_SNOMED-CT)</hoverTexts>
+        <hoverTexts>Age: 5 years</hoverTexts>
+        <hoverTexts>Age: 6 years</hoverTexts>
+        <hoverTexts>Age: 7 years</hoverTexts>
+        <itemId>15</itemId>
+        <status>Complete</status>
+    </facts>
+    <successStatus>true</successStatus>
+</patientDataFact>
+

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+          http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+">
+
+    <context:annotation-config/>
+    
+    <!-- ==================================================================
+         [4] TRANSFORM ACTION - defines TRANSFOMR STYLESHEET to use.
+         NOTE: chosen based on PIPELINE.transformChain
+         ================================================================== -->
+   <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+        <property name="xsltStyleSheet">
+            <bean class="org.springframework.core.io.ClassPathResource">
+                <constructor-arg value="xml-to-json.xsl"/>          
+            </bean>
+        </property>
+        <property name="styleSheetParameters">
+            <map>
+                <entry key="use-badgerfish" value="#{false}"/>
+                <entry key="use-rayfish" value="#{false}"/>
+                <entry key="use-namespaces"  value="#{false}"/>
+            </map>
+        </property>
+    </bean>
+    
+    <!-- Getting Static JSON return - Bypassing Transform action -->
+    <bean name="StaticFHIRResource" class="org.socraticgrid.documenttransformer.StaticResource">
+        <property name="staticResource">
+            <bean class="org.springframework.core.io.ClassPathResource">
+                <constructor-arg value="FHIR_Reaction_AtomBundle.xml"/>
+            </bean>
+        </property>
+    </bean>
+        
+    <!-- ==================================================================
+         [4] TRANSFORM PIPELINE - defines TRANSFOMR ACTION to use.
+         NOTE: chosen based on BINDINGS.transforms[domainname]
+         ================================================================== -->
+    <bean name="ToJSON" class="org.socraticgrid.documenttransformer.TransformPipeline">
+        <property name="transformChain">
+            <list>
+                <ref bean="XML2JSONXform"/>
+            </list>
+        </property>
+    </bean>
+    
+    
+    <bean name="GetStaticFIHR" class="org.socraticgrid.documenttransformer.TransformPipeline">
+        <property name="transformChain">
+            <list>
+                <ref bean="StaticFHIRResource" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- ==================================================================
+         [OPTIONAL USE] TRANFORMER - defines the TRANSFORMER PIPELINE.
+         NOTE:  user has to know the bean name to instantiate.
+         ================================================================== -->
+    <bean name="MyTransformer" class="org.socraticgrid.documenttransformer.Transformer">
+        <property name="transformPipeline">
+            <map>
+                <entry key="ToJSONPipeline" value-ref="ToJSON"/>
+                <entry key="StaticByPassTransform" value-ref="GetStaticFIHR"/>
+            </map>
+        </property>
+    </bean>
+    
+    <!-- ==================================================================
+         [3] DATASOURCEs - defines the repo ENDPOINT and and the  
+                       supported DOMAINS and their corresponding QUERY.
+         NOTE: chosen based on BINDING.datasource
+         ================================================================== -->
+    
+    <bean name="SampleFMQLPatientDataSource" class="org.socraticgrid.fmqllib.DataSource">
+        <property name="fmqlEndpoint" value="http://10.255.167.112/fmqlEP"/>
+        <property name="domainQueryMap">
+            <map>
+                <entry key="demographics" value="DESCRIBE 2-%1s"/>
+                <entry key="medications"  value="DESCRIBE 8810_3-%1s"/>
+                <entry key="allergies"    value="DESCRIBE 8810_3-%1s"/>
+            </map>
+        </property>
+    </bean>    
+    
+    <!-- CONFIGURE TO USE INCOMING XML DATA FROM A STATIC FILE -->
+    <bean name="SampleStaticXMLDataSource" class="org.socraticgrid.patientdataservices.StaticDataSource">
+        <property name="domainResources">
+            <map>
+                <entry key="demographics" value-ref="XMLDataIn"/>
+            </map>
+        </property>
+    </bean>
+    <bean name="XMLDataIn" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg value="sampleXMLdata.xml"/>
+    </bean>
+    
+    <!-- ==================================================================
+         [2] PIPELINE TO TRANSFORMs - defines the TRANSFORMER and the DATASOURCE.
+         NOTE: chosen based on RETRIEVER.transformer
+         ================================================================== --> 
+
+    <!-- COMMENTING out the transform definition for now since the FMQL ws being
+         only returns data in JSON already.
+    -->
+    <bean name="SampleFMQL-DS-Binding" class="org.socraticgrid.patientdataservices.DataSourceBinding">
+        <property name="dataSource" ref="SampleFMQLPatientDataSource"/>
+        <!--property name="transforms">
+            <map>
+                <entry key="demographics" value="ToJSONPipeline"/>
+                <entry key="medications" value="ToJSONPipeline"/>
+            </map>
+        </property-->
+    </bean>
+    
+    <bean name="SampleStaticFMQL-DS-Binding" class="org.socraticgrid.patientdataservices.DataSourceBinding">
+        <property name="dataSource" ref="SampleFMQLPatientDataSource"/>
+        <property name="transforms">
+            <map>
+                <entry key="allergies" value="StaticByPassTransform"/>
+            </map>
+        </property>
+    </bean>
+    
+    <bean name="SampleStaticXMLBinding" class="org.socraticgrid.patientdataservices.DataSourceBinding">
+        <property name="dataSource" ref="SampleStaticXMLDataSource"/>
+        <property name="transforms">
+            <map>
+                <entry key="demographics" value="ToJSONPipeline"/>
+            </map>
+        </property>
+    </bean>
+        
+    <!-- ==================================================================
+         [1] RETRIEVER - defines the TRANSFORMER and the DATASOURCE BINDINGs
+         NOTE:  user has to know the bean name to instantiate.
+         ================================================================== --> 
+
+    <!-- SAMPLE TO PROCESS INCOMING FMQL DATA (from actual fmql server) -->
+    <bean name="FMQLRetriever" class="org.socraticgrid.patientdataservices.MainRetriever">
+        <property name="transformer"  ref="MyTransformer"/>
+        <property name="dataSources">
+            <map>
+                <entry key="FMQL" value-ref="SampleFMQL-DS-Binding"/> 
+                <entry key="FMQLStaticTransformByPass" value-ref="SampleStaticFMQL-DS-Binding"/>
+                <entry key="FMQLStaticXML" value-ref="SampleStaticXMLBinding"/> 
+            </map>
+        </property>     
+    </bean>
+    
+
+    
+</beans>
