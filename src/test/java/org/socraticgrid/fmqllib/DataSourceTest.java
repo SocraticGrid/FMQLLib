@@ -13,11 +13,14 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.socraticgrid.patientdataservices.MainRetriever;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 /**
  *
@@ -29,25 +32,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 // UNK: THIS ContextConfiguration NOTATION NOT WORKING.
 @ContextConfiguration(locations={"classpath:Test-FMQLDataSourceTest.xml"})
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 
-public class DataSourceTest extends TestCase  implements ApplicationContextAware
+public class DataSourceTest extends TestCase 
 {
     
     public DataSourceTest()
     {
     }
    
+    @Autowired
     private ApplicationContext ctx;
-//    {
-//        // Had to instantiate this directly cause ContextConfiguration annotation didn't work..unk.
-//        this.ctx = new ClassPathXmlApplicationContext("classpath:Test-FMQLDataSourceTest.xml");
-//    }
-    
-    public void setApplicationContext(ApplicationContext context)
-    {
-        this.ctx = context;
-    }
-
 
     @Override
     protected void setUp() throws Exception
@@ -87,8 +82,6 @@ public class DataSourceTest extends TestCase  implements ApplicationContextAware
         String fmqlEndpoint = "";
         DataSource instance = (DataSource) ctx.getBean("SampleFMQLPatientDataSource");
         instance.setFmqlEndpoint(fmqlEndpoint);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
