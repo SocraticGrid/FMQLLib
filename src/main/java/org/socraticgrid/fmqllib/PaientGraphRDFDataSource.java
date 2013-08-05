@@ -44,75 +44,45 @@ package org.socraticgrid.fmqllib;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
- * DOCUMENT ME!
  *
- * @author  Jerry Goodnough
+ * @author Jerry Goodnough
  */
-public class DataSource extends org.socraticgrid.patientdataservices.BaseDataSource
+public class PaientGraphRDFDataSource extends org.socraticgrid.patientdataservices.BaseDataSource
 {
-    private static final Logger logger = Logger.getLogger(
-            PaientGraphRDFDataSource.class.getName());
-    private Map<String, String> domainQueryMap; //
-    private String fmqlEndpoint; // DATA SOURCE endpoint
 
-    public DataSource()
+    private static final Logger logger = Logger.getLogger(PaientGraphRDFDataSource.class.getName());
+
+    public PaientGraphRDFDataSource()
     {
     }
+    private String patientGraphEndpoint; // DATA SOURCE endpoint
 
-    @Override
-    public InputStream getData(String domain, String id, java.util.Properties props)
+    /**
+     * Get the value of patientGraphEndpoint
+     *
+     * @return the value of patientGraphEndpoint
+     */
+    public String getPatientGraphEndpoint()
     {
-        String query = domainQueryMap.get(domain);
-        String realQuery = String.format(query, id);
-        logger.log(Level.FINE, "realQuery={0}", realQuery);
-
-        // Use the new real query string and the endpoint to query fmwl.
-        // --------------------------------
-        // EXEC the query
-        // --------------------------------
-        InputStream in = null;
-
-        try
-        {
-            in = querySource(realQuery, this.fmqlEndpoint);
-        }
-        catch (Exception ex)
-        {
-            Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return in;
+        return patientGraphEndpoint;
     }
 
     /**
-     * Get the value of domainQueryMap.
+     * Set the value of patientGraphEndpoint
      *
-     * @return  the value of domainQueryMap
+     * @param patientGraphEndpoint new value of patientGraphEndpoint
      */
-    public Map<String, String> getDomainQueryMap()
+    public void setPatientGraphEndpoint(String patientGraphEndpoint)
     {
-        return domainQueryMap;
-    }
-
-    /**
-     * Get the value of fmqlEndpoint.
-     *
-     * @return  the value of fmqlEndpoint
-     */
-    public String getFmqlEndpoint()
-    {
-        return fmqlEndpoint;
+        this.patientGraphEndpoint = patientGraphEndpoint;
     }
 
     @Override
@@ -120,60 +90,84 @@ public class DataSource extends org.socraticgrid.patientdataservices.BaseDataSou
     {
         return this.domainQueryMap.containsKey(domain);
     }
-
-    public InputStream querySource(String query, String ep) throws Exception
-    {
-        logger.log(Level.FINE, "fmql ep= {0}", ep);
-
-        String sparqlrs = ep.concat("?fmql=").concat(URLEncoder.encode(query,
-                    "UTF-8"));
-// + "?fmql="
-// + URLEncoder.encode(query, "UTF-8");
-        logger.log(Level.FINE, "ep+query= {0}", sparqlrs);
-
-        URL sparqlr = new URL(sparqlrs);
-
-        // 1. Make the query
-        URLConnection sparqlc = sparqlr.openConnection();
-
-        // 2. Read the Response
-        InputStream in = sparqlc.getInputStream();
-
-        return in;
-    }
+    private Map<String, String> domainQueryMap;    //
 
     /**
-     * This will send the given FMQL format query to the FILEMAN interface, and get a
-     * response as a BufferedReader object.
+     * Get the value of domainQueryMap
      *
-     * @param   query
-     *
-     * @return
-     *
-     * @throws  Exception
+     * @return the value of domainQueryMap
      */
-    public BufferedReader request(String query, String ep) throws Exception
+    public Map<String, String> getDomainQueryMap()
     {
-        return new BufferedReader(new InputStreamReader(querySource(query, ep)));
+        return domainQueryMap;
     }
 
     /**
-     * Set the value of domainQueryMap.
+     * Set the value of domainQueryMap
      *
-     * @param  domainQueryMap  new value of domainQueryMap
+     * @param domainQueryMap new value of domainQueryMap
      */
     public void setDomainQueryMap(Map<String, String> domainQueryMap)
     {
         this.domainQueryMap = domainQueryMap;
     }
 
-    /**
-     * Set the value of fmqlEndpoint.
-     *
-     * @param  fmqlEndpoint  new value of fmqlEndpoint
-     */
-    public void setFmqlEndpoint(String fmqlEndpoint)
+    @Override
+    public InputStream getData(String domain, String id, java.util.Properties props)
     {
-        this.fmqlEndpoint = fmqlEndpoint;
+        String query = domainQueryMap.get(domain);
+        String realQuery = String.format(query, id);
+
+        logger.log(Level.FINE, "Patient Data Graph realQuery={0}", realQuery);
+
+        //Use the new real query string and the endpoint to query fmwl.
+        //--------------------------------
+        // EXEC the query
+        //--------------------------------
+        InputStream in = null;
+        try
+        {
+            in = querySource(realQuery, this.patientGraphEndpoint);
+        }
+        catch (Exception ex)
+        {
+            Logger.getLogger(PaientGraphRDFDataSource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return in;
+    }
+
+    /**
+     * This will send the given FMQL format query to the FILEMAN interface, and
+     * get a response as a BufferedReader object.
+     *
+     * @param query
+     * @return
+     * @throws Exception
+     */
+    public BufferedReader request(String query, String ep) throws Exception
+    {
+        return new BufferedReader(
+                new InputStreamReader(querySource(query, ep)));
+    }
+
+    public InputStream querySource(String query, String ep) throws Exception
+    {
+
+        logger.log(Level.FINE, "pgep= {0}", ep);
+
+        String sparqlrs = ep.concat("?").concat(query);
+//                + "?fmql=" 
+//                + URLEncoder.encode(query, "UTF-8");
+
+        logger.log(Level.INFO, "pgep+query= {0}", sparqlrs);
+
+        URL sparqlr = new URL(sparqlrs);
+        // 1. Make the query
+        URLConnection sparqlc = sparqlr.openConnection();
+        // 2. Read the Response
+        InputStream in = sparqlc.getInputStream();
+
+        return in;
     }
 }
