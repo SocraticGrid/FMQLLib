@@ -14,10 +14,10 @@
     <context:annotation-config/>
     
     <!-- ==================================================================
-         [4] TRANSFORM ACTION - defines TRANSFOMR STYLESHEET to use.
-         NOTE: chosen based on PIPELINE.transformChain
-         ================================================================== -->
-   <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    [4] TRANSFORM ACTION - defines TRANSFOMR STYLESHEET to use.
+    NOTE: chosen based on PIPELINE.transformChain
+    ================================================================== -->
+    <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="xml-to-json.xsl"/>          
@@ -42,9 +42,9 @@
     </bean>
         
     <!-- ==================================================================
-         [4] TRANSFORM PIPELINE - defines TRANSFOMR ACTION to use.
-         NOTE: chosen based on BINDINGS.transforms[domainname]
-         ================================================================== -->
+    [4] TRANSFORM PIPELINE - defines TRANSFOMR ACTION to use.
+    NOTE: chosen based on BINDINGS.transforms[domainname]
+    ================================================================== -->
     <bean name="ToJSON" class="org.socraticgrid.documenttransformer.TransformPipeline">
         <property name="transformChain">
             <list>
@@ -63,9 +63,9 @@
     </bean>
 
     <!-- ==================================================================
-         [OPTIONAL USE] TRANFORMER - defines the TRANSFORMER PIPELINE.
-         NOTE:  user has to know the bean name to instantiate.
-         ================================================================== -->
+    [OPTIONAL USE] TRANFORMER - defines the TRANSFORMER PIPELINE.
+    NOTE:  user has to know the bean name to instantiate.
+    ================================================================== -->
     <bean name="MyTransformer" class="org.socraticgrid.documenttransformer.Transformer">
         <property name="transformPipeline">
             <map>
@@ -76,10 +76,10 @@
     </bean>
     
     <!-- ==================================================================
-         [3] DATASOURCEs - defines the repo ENDPOINT and and the  
-                       supported DOMAINS and their corresponding QUERY.
-         NOTE: chosen based on BINDING.datasource
-         ================================================================== -->
+    [3] DATASOURCEs - defines the repo ENDPOINT and and the  
+                  supported DOMAINS and their corresponding QUERY.
+    NOTE: chosen based on BINDING.datasource
+    ================================================================== -->
     
     <bean name="SampleFMQLPatientDataSource" class="org.socraticgrid.fmqllib.DataSource">
         <property name="fmqlEndpoint" value="http://10.255.167.112/fmqlEP"/>
@@ -88,6 +88,25 @@
                 <entry key="demographics" value="DESCRIBE 2-%1s"/>
                 <entry key="medications"  value="DESCRIBE 8810_3-%1s"/>
                 <entry key="allergies"    value="DESCRIBE 8810_3-%1s"/>
+            </map>
+        </property>
+    </bean>    
+    
+    
+    <!-- == ================================================================== -->
+    
+    <bean name="SamplePatientDataGraphSource" class="org.socraticgrid.fmqllib.PaientGraphRDFDataSource">
+        <property name="patientGraphEndpoint" value="http://10.255.167.112/pgrafEP"/>
+        <property name="domainQueryMap">
+            <map>
+                <entry key="labs" value="type=LABS&amp;patient=%1s"/>
+                <entry key="radiology" value="type=RADIOLOGY&amp;patient=%1s"/>
+                <entry key="diagnosis" value="type=DIAGNOSIS&amp;patient=%1s"/>
+                <entry key="demographics" value="type=DEMOGRAPHICS&amp;patient=%1s"/>
+                <entry key="medications"  value="type=MEDSOP&amp;patient=%1s"/>
+                <entry key="allergies"    value="type=ALLERGIES&amp;patient=%1s"/>
+                <entry key="appointments"    value="type=APPOINTMENTS&amp;patient=%1s"/>
+                <entry key="visits"    value="type=ENCOUNTERS&amp;patient=%1s"/>
             </map>
         </property>
     </bean>    
@@ -105,21 +124,15 @@
     </bean>
     
     <!-- ==================================================================
-         [2] PIPELINE TO TRANSFORMs - defines the TRANSFORMER and the DATASOURCE.
-         NOTE: chosen based on RETRIEVER.transformer
-         ================================================================== --> 
+    [2] PIPELINE TO TRANSFORMs - defines the TRANSFORMER and the DATASOURCE.
+    NOTE: chosen based on RETRIEVER.transformer
+    ================================================================== --> 
 
     <!-- COMMENTING out the transform definition for now since the FMQL ws being
          only returns data in JSON already.
     -->
     <bean name="SampleFMQL-DS-Binding" class="org.socraticgrid.patientdataservices.DataSourceBinding">
         <property name="dataSource" ref="SampleFMQLPatientDataSource"/>
-        <!--property name="transforms">
-            <map>
-                <entry key="demographics" value="ToJSONPipeline"/>
-                <entry key="medications" value="ToJSONPipeline"/>
-            </map>
-        </property-->
     </bean>
     
     <bean name="SampleStaticFMQL-DS-Binding" class="org.socraticgrid.patientdataservices.DataSourceBinding">
@@ -139,24 +152,28 @@
             </map>
         </property>
     </bean>
+           
+    <bean name="SamplePatientDataGraphSourceBinding" class="org.socraticgrid.patientdataservices.DataSourceBinding">
+        <property name="dataSource" ref="SamplePatientDataGraphSource"/>
+    </bean>
+        
         
     <!-- ==================================================================
-         [1] RETRIEVER - defines the TRANSFORMER and the DATASOURCE BINDINGs
-         NOTE:  user has to know the bean name to instantiate.
-         ================================================================== --> 
+    [1] RETRIEVER - defines the TRANSFORMER and the DATASOURCE BINDINGs
+    NOTE:  user has to know the bean name to instantiate.
+    ================================================================== --> 
 
     <!-- SAMPLE TO PROCESS INCOMING FMQL DATA (from actual fmql server) -->
     <bean name="FMQLRetriever" class="org.socraticgrid.patientdataservices.MainRetriever">
         <property name="transformer"  ref="MyTransformer"/>
         <property name="dataSources">
             <map>
+                <entry key="PatientRDFGraph" value-ref="SamplePatientDataGraphSourceBinding"/> 
                 <entry key="FMQL" value-ref="SampleFMQL-DS-Binding"/> 
                 <entry key="FMQLStaticTransformByPass" value-ref="SampleStaticFMQL-DS-Binding"/>
                 <entry key="FMQLStaticXML" value-ref="SampleStaticXMLBinding"/> 
             </map>
         </property>     
     </bean>
-    
-
     
 </beans>
