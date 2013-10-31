@@ -17,7 +17,7 @@
     [4] TRANSFORM ACTION - defines TRANSFOMR STYLESHEET to use.
     NOTE: chosen based on PIPELINE.transformChain
     ================================================================== -->
-    <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="xml-to-json.xsl"/>          
@@ -33,7 +33,7 @@
     </bean>
     
     <!-- Getting Static JSON return - Bypassing Transform action -->
-    <bean name="StaticFHIRResource" class="org.socraticgrid.documenttransformer.StaticResource">
+    <bean name="StaticFHIRResource" class="org.socraticgrid.documenttransformer.transfromsteps.StaticResource">
         <property name="staticResource">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="FHIR_Reaction_AtomBundle.xml"/>
@@ -45,7 +45,7 @@
     [4] TRANSFORM PIPELINE - defines TRANSFOMR ACTION to use.
     NOTE: chosen based on BINDINGS.transforms[domainname]
     ================================================================== -->
-    <bean name="ToJSON" class="org.socraticgrid.documenttransformer.TransformPipeline">
+    <bean name="ToJSON" class="org.socraticgrid.documenttransformer.SerialTransformPipeline">
         <property name="transformChain">
             <list>
                 <ref bean="XML2JSONXform"/>
@@ -54,7 +54,7 @@
     </bean>
     
     
-    <bean name="GetStaticFIHR" class="org.socraticgrid.documenttransformer.TransformPipeline">
+    <bean name="GetStaticFIHR" class="org.socraticgrid.documenttransformer.SerialTransformPipeline">
         <property name="transformChain">
             <list>
                 <ref bean="StaticFHIRResource" />
@@ -85,9 +85,9 @@
         <property name="fmqlEndpoint" value="http://10.255.167.112/fmqlEP"/>
         <property name="domainQueryMap">
             <map>
-                <entry key="demographics" value="DESCRIBE 2-%1s"/>
-                <entry key="medications"  value="DESCRIBE 8810_3-%1s"/>
-                <entry key="allergies"    value="DESCRIBE 8810_3-%1s"/>
+                <entry key="demographics" value="DESCRIBE 2-@id@"/>
+                <entry key="medications"  value="DESCRIBE 8810_3-@id@"/>
+                <entry key="allergies"    value="DESCRIBE 8810_3-@id@"/>
             </map>
         </property>
     </bean>    
@@ -95,18 +95,18 @@
     
     <!-- == ================================================================== -->
     
-    <bean name="SamplePatientDataGraphSource" class="org.socraticgrid.fmqllib.PaientGraphRDFDataSource">
+    <bean name="SamplePatientDataGraphSource" class="org.socraticgrid.fmqllib.PatientGraphRDFDataSource">
         <property name="patientGraphEndpoint" value="http://10.255.167.112/pgrafEP"/>
         <property name="domainQueryMap">
             <map>
-                <entry key="labs" value="type=LABS&amp;patient=%1s"/>
-                <entry key="radiology" value="type=RADIOLOGY&amp;patient=%1s"/>
-                <entry key="diagnosis" value="type=DIAGNOSIS&amp;patient=%1s"/>
-                <entry key="demographics" value="type=DEMOGRAPHICS&amp;patient=%1s"/>
-                <entry key="medications"  value="type=MEDSOP&amp;patient=%1s"/>
-                <entry key="allergies"    value="type=ALLERGIES&amp;patient=%1s"/>
-                <entry key="appointments"    value="type=APPOINTMENTS&amp;patient=%1s"/>
-                <entry key="visits"    value="type=ENCOUNTERS&amp;patient=%1s"/>
+                <entry key="labs" value="type=LABS&amp;patient=@id@"/>
+                <entry key="rads" value="type=RADIOLOGY&amp;patient=@id@"/>
+                <entry key="diagnosis" value="type=DIAGNOSES&amp;patient=@id@"/>
+                <entry key="demographics" value="type=DEMOGRAPHICS&amp;patient=@id@"/>
+                <entry key="medications"  value="type=MEDSOP&amp;patient=@id@"/>
+                <entry key="allergies"    value="type=ALLERGIES&amp;patient=@id@"/>
+                <entry key="appointments"    value="type=APPOINTMENTS&amp;patient=@id@"/>
+                <entry key="visits"    value="type=ENCOUNTERS&amp;patient=@id@"/>
             </map>
         </property>
     </bean>    

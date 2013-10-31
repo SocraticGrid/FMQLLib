@@ -48,6 +48,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,12 +56,12 @@ import java.util.logging.Logger;
  *
  * @author Jerry Goodnough
  */
-public class PaientGraphRDFDataSource extends org.socraticgrid.patientdataservices.BaseDataSource
+public class PatientGraphRDFDataSource extends org.socraticgrid.patientdataservices.BaseDataSource
 {
 
-    private static final Logger logger = Logger.getLogger(PaientGraphRDFDataSource.class.getName());
+    private static final Logger logger = Logger.getLogger(PatientGraphRDFDataSource.class.getName());
 
-    public PaientGraphRDFDataSource()
+    public PatientGraphRDFDataSource()
     {
     }
     private String patientGraphEndpoint; // DATA SOURCE endpoint
@@ -116,8 +117,20 @@ public class PaientGraphRDFDataSource extends org.socraticgrid.patientdataservic
     public InputStream getData(String domain, String id, java.util.Properties props)
     {
         String query = domainQueryMap.get(domain);
-        String realQuery = String.format(query, id);
-
+        String realQuery = query;
+        
+        //TODO: use some kind of template framework?
+        //add 'id' to the replacement properties.
+        Properties templateProps = new Properties();
+        if (props != null){
+            templateProps.putAll(props);
+        }
+        templateProps.put("id", id);
+        
+        for (Map.Entry<Object, Object> entry : templateProps.entrySet()) {
+            realQuery = realQuery.replaceAll("@"+entry.getKey().toString()+"@", entry.getValue().toString());
+        }
+        
         logger.log(Level.FINE, "Patient Data Graph realQuery={0}", realQuery);
 
         //Use the new real query string and the endpoint to query fmwl.
@@ -131,7 +144,7 @@ public class PaientGraphRDFDataSource extends org.socraticgrid.patientdataservic
         }
         catch (Exception ex)
         {
-            Logger.getLogger(PaientGraphRDFDataSource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PatientGraphRDFDataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return in;

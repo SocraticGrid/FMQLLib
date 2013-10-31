@@ -27,13 +27,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
  * @author Jerry Goodnough
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-// ApplicationContext will be loaded from "/applicationContext.xml" and "/applicationContext-test.xml"
-// in the root of the classpath
-
-// UNK: THIS ContextConfiguration NOTATION NOT WORKING.
 @ContextConfiguration(locations={"classpath:Test-FMQLDataSourceTest.xml"})
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-
 public class DataSourceTest extends TestCase 
 {
     
@@ -110,8 +105,6 @@ public class DataSourceTest extends TestCase
 
     /**
      * Test of getDomainQueryMap method, of class DataSource.
-     * NOTE:  weirdly, "focused" test or debug test on this test passes ok.
-     *        But, an overall "test file" fails on building the endpoint+query URL string.
      */
     @Test
     public void testGetDomainQueryMap()
@@ -144,8 +137,6 @@ public class DataSourceTest extends TestCase
 
     /**
      * Test of getData method, of class DataSource.
-     * NOTE:  weirdly, "focused" test or debug test on this test passes ok.
-     *        But, an overall "test file" fails on building the endpoint+query URL string.
      */
     @Test
     public void testGetData() throws IOException
@@ -163,20 +154,6 @@ public class DataSourceTest extends TestCase
         
     }
     
-    /**
-     * 
-     * NOTE:  weirdly, "focused" test or debug test on this test passes ok.
-     *        But, an overall "test file" fails on building the endpoint+query URL string.
-     * 
-     * 
-     *   Running Focused Test is ok:  
-     *      ep+query= http://10.255.167.112/fmqlEP?fmql=DESCRIBE+2-1006387
-     * 
-     *   ??? Running Test File fails with:  java.net.MalformedURLException
-     *      ep+query= ?fmql=DESCRIBE+2-100638
-     * 
-     * @throws IOException 
-     */
     @Test
     public void testRetrieveFMQLData() throws IOException {
         

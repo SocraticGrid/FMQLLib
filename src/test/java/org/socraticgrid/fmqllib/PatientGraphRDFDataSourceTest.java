@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 
 /**
@@ -37,11 +38,9 @@ import java.util.logging.Logger;
  *
  * @author  Jerry Goodnough
  */
-@ContextConfiguration(locations = { "classpath:Test-FMQLDataSourceTest.xml" })
-// @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-// ApplicationContext will be loaded from "/applicationContext.xml" and
-// "/applicationContext-test.xml" in the root of the classpath
+@ContextConfiguration(locations = { "classpath:Test-FMQLDataSourceTest.xml" })
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class PatientGraphRDFDataSourceTest extends TestCase
 {
     private static final Logger logger = Logger.getLogger(
@@ -54,9 +53,8 @@ public class PatientGraphRDFDataSourceTest extends TestCase
     }
 
     /**
-     * Test of getData method, of class DataSource. NOTE: weirdly, "focused" test or
-     * debug test on this test passes ok. But, an overall "test file" fails on
-     * building the endpoint+query URL string.
+     * Test of getData method, of class DataSource. 
+     * @throws java.io.IOException
      */
     @Test
     public void testGetData() throws IOException
@@ -66,7 +64,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
 
         String domain = "demographics";
         String id = "1006387";
-        PaientGraphRDFDataSource source = (PaientGraphRDFDataSource) ctx.getBean(
+        PatientGraphRDFDataSource source = (PatientGraphRDFDataSource) ctx.getBean(
                 "SamplePatientDataGraphSource");
         assertNotNull("Missing SamplePatientDataGraphSource", source);
 
@@ -79,9 +77,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
     }
 
     /**
-     * Test of getDomainQueryMap method, of class DataSource. NOTE: weirdly,
-     * "focused" test or debug test on this test passes ok. But, an overall "test
-     * file" fails on building the endpoint+query URL string.
+     * Test of getDomainQueryMap method, of class DataSource.
      */
     @Test
     public void testGetDomainQueryMap()
@@ -89,7 +85,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
         logger.info("\n=========================\nTESTING getDomainQueryMap");
         assertNotNull("Missing Context Object", ctx);
 
-        PaientGraphRDFDataSource instance = (PaientGraphRDFDataSource) ctx.getBean(
+        PatientGraphRDFDataSource instance = (PatientGraphRDFDataSource) ctx.getBean(
                 "SamplePatientDataGraphSource");
         Map expResult = null;
         Map result = instance.getDomainQueryMap();
@@ -106,7 +102,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
         logger.info("\n=========================\nTESTING getPatientGraphEndpoint");
         assertNotNull("Missing Context Object", ctx);
 
-        PaientGraphRDFDataSource instance = (PaientGraphRDFDataSource) ctx.getBean(
+        PatientGraphRDFDataSource instance = (PatientGraphRDFDataSource) ctx.getBean(
                 "SamplePatientDataGraphSource");
         String result = instance.getPatientGraphEndpoint();
         logger.log(Level.INFO, "EP={0}", result);
@@ -122,18 +118,18 @@ public class PatientGraphRDFDataSourceTest extends TestCase
         assertNotNull("Missing Context Object", ctx);
 
         String domain = "demographics";
-        PaientGraphRDFDataSource instance = (PaientGraphRDFDataSource) ctx.getBean(
+        PatientGraphRDFDataSource instance = (PatientGraphRDFDataSource) ctx.getBean(
                 "SamplePatientDataGraphSource");
         boolean expResult = false;
         boolean result = instance.isDomainSupported(domain);
 
         if (result)
         {
-            logger.info("Domain " + domain + " is supported");
+            logger.log(Level.INFO, "Domain {0} is supported", domain);
         }
         else
         {
-            logger.info("Domain " + domain + " is NOT upported");
+            logger.log(Level.INFO, "Domain {0} is NOT upported", domain);
         }
 
         // assertEquals(expResult, result);
@@ -141,15 +137,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
         // fail("The test case is a prototype.");
     }
 
-    /**
-     * NOTE: weirdly, "focused" test or debug test on this test passes ok. But, an
-     * overall "test file" fails on building the endpoint+query URL string.
-     *
-     * <p>Running Focused Test is ok:
-     * 10.255.167.112/pgrafEP?patient=1006387&type=ALLERGIES</p>
-     *
-     * @throws  IOException
-     */
+    
     @Test
     public void testRetrieveDemographicData() throws IOException
     {
@@ -213,7 +201,6 @@ public class PatientGraphRDFDataSourceTest extends TestCase
     /**
      * Test of setDomainQueryMap method, of class DataSource.
      */
-    @DirtiesContext
     @Test
     public void testSetDomainQueryMap()
     {
@@ -221,7 +208,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
         assertNotNull("Missing Context Object", ctx);
 
         Map<String, String> domainQueryMap = null;
-        PaientGraphRDFDataSource instance = (PaientGraphRDFDataSource) ctx.getBean(
+        PatientGraphRDFDataSource instance = (PatientGraphRDFDataSource) ctx.getBean(
                 "SamplePatientDataGraphSource");
         instance.setDomainQueryMap(domainQueryMap);
 
@@ -232,7 +219,6 @@ public class PatientGraphRDFDataSourceTest extends TestCase
     /**
      * Test of setFmqlEndpoint method, of class DataSource.
      */
-    @DirtiesContext
     @Test
     public void testSetPatientGraphEndpoint()
     {
@@ -240,7 +226,7 @@ public class PatientGraphRDFDataSourceTest extends TestCase
         assertNotNull("Missing Context Object", ctx);
 
         String endpoint = "http://localhost";
-        PaientGraphRDFDataSource instance = (PaientGraphRDFDataSource) ctx.getBean(
+        PatientGraphRDFDataSource instance = (PatientGraphRDFDataSource) ctx.getBean(
                 "SamplePatientDataGraphSource");
         instance.setPatientGraphEndpoint(endpoint);
     }

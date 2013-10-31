@@ -50,6 +50,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,7 +63,7 @@ import java.util.logging.Logger;
 public class DataSource extends org.socraticgrid.patientdataservices.BaseDataSource
 {
     private static final Logger logger = Logger.getLogger(
-            PaientGraphRDFDataSource.class.getName());
+            PatientGraphRDFDataSource.class.getName());
     private Map<String, String> domainQueryMap; //
     private String fmqlEndpoint; // DATA SOURCE endpoint
 
@@ -74,7 +75,20 @@ public class DataSource extends org.socraticgrid.patientdataservices.BaseDataSou
     public InputStream getData(String domain, String id, java.util.Properties props)
     {
         String query = domainQueryMap.get(domain);
-        String realQuery = String.format(query, id);
+        String realQuery = query;
+        
+        //TODO: use some kind of template framework?
+        //add 'id' to the replacement properties.
+        Properties templateProps = new Properties();
+        if (props != null){
+            templateProps.putAll(props);
+        }
+        templateProps.put("id", id);
+        
+        for (Map.Entry<Object, Object> entry : templateProps.entrySet()) {
+            realQuery = realQuery.replaceAll("@"+entry.getKey().toString()+"@", entry.getValue().toString());
+        }
+        
         logger.log(Level.FINE, "realQuery={0}", realQuery);
 
         // Use the new real query string and the endpoint to query fmwl.
